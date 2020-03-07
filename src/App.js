@@ -1,24 +1,43 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+
+const JACK_TYPES = {
+  INPUT: 'INPUT',
+  OUTPUT: 'OUTPUT'
+};
+
+const jacks = [
+  {
+    id: 0,
+    type: JACK_TYPES.OUTPUT,
+  },
+  {
+    id: 1,
+    type: JACK_TYPES.OUTPUT,
+  }
+]
 
 function App() {
+  const startCable = (event) => {
+    event.preventDefault();
+    console.log('%cSTART FROM JACK', 'background-color: #c36230; padding: 5px; border-radius: 3px; font-weight: bold; color: white');
+  };
+
+  const dropCable = ({ target: { className } }) => {
+    if (className.baseVal === 'eurorack-container') {
+      console.log('%cDRAGGED CABLE TO NOWHERE', 'background-color: #1962dd; padding: 5px; border-radius: 3px; font-weight: bold; color: white');
+    }
+  };
+
+  const endCable = (event) => {
+    console.log('%cPLUGGED IT INTO JACK', 'background-color: #f0b430; padding: 5px; border-radius: 3px; font-weight: bold; color: black')
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <svg onMouseUp={(event) => dropCable(event)} className="eurorack-container" width="500" height="500">
+        <circle onMouseUp={(event) => endCable(event)} onMouseDown={(event) => startCable(event)} cx="50" cy="50" r="20" stroke="gray" strokeWidth="4" fill="black" />
+        <circle onMouseUp={(event) => endCable(event)} onMouseDown={(event) => startCable(event)} cx="250" cy="50" r="20" stroke="gray" strokeWidth="4" fill="black" />
+      </svg>
     </div>
   );
 }
