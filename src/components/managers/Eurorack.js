@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PatchCable from '../devices/PatchCable';
 import { getJackById, JACK_TYPES } from '../../utils/jack';
 import { patchCableColors } from '../../constants/colors';
 
@@ -21,9 +22,33 @@ const jacks = [
   {
     id: 1,
     type: JACK_TYPES.INPUT,
+    x: 100,
+    y: 50,
+  },
+  {
+    id: 2,
+    type: JACK_TYPES.INPUT,
     x: 150,
     y: 50,
-  }
+  },
+  {
+    id: 3,
+    type: JACK_TYPES.INPUT,
+    x: 50,
+    y: 100,
+  },
+  {
+    id: 4,
+    type: JACK_TYPES.OUTPUT,
+    x: 100,
+    y: 100,
+  },
+  {
+    id: 5,
+    type: JACK_TYPES.OUTPUT,
+    x: 150,
+    y: 100,
+  },
 ];
 
 export default ({ children }) => {
@@ -53,6 +78,7 @@ export default ({ children }) => {
       color: getRandomPatchCableColor(),
       startX,
       startY,
+      startJackId: jackId,
     });
   };
 
@@ -70,6 +96,7 @@ export default ({ children }) => {
       ...ghostPatchCable,
       endX,
       endY,
+      endJackId: jackId,
     });
   };
 
@@ -98,6 +125,14 @@ export default ({ children }) => {
     }}>
       <svg onMouseMove={(event) => moveCableAround(event)} onMouseUp={(event) => dropCable(event)} className="eurorack-case" width="500" height="500">
         {children}
+        {cables.map((cable, index) => (
+          <PatchCable key={index} parameters={cable} startCable={startCable} endCable={endCable} isConnected />
+        ))}
+        {isPatching ? (
+          <PatchCable parameters={ghostPatchCable} />
+        ) : (
+          <></>
+        )}
       </svg>
     </EurorackContext.Provider>
   );
