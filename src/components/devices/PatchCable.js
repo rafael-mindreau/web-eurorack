@@ -10,7 +10,7 @@ export default ({
   return (
     <path
       opacity={opacity}
-      strokeWidth="10"
+      strokeWidth="14"
       stroke={parameters.color}
       fill="transparent"
       d={`
