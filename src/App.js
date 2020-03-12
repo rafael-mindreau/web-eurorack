@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import PatchCable from './components/devices/PatchCable';
+import PJ301 from './components/devices/PJ301';
 
 const JACK_TYPES = {
   INPUT: 'INPUT',
@@ -19,6 +21,16 @@ const getRandomOffset = (originX, originY) => {
   return { x: offsetX + originX, y: offsetY + originY };
 };
 
+const colors = [
+  '#34D4DD',
+  '#ec557d',
+  '#3b3140',
+  '#f1e176',
+  '#0666CC',
+  '#f4f4f4',
+  '#dd3545',
+];
+
 const jacks = [
   {
     id: 0,
@@ -33,6 +45,11 @@ const jacks = [
     y: 50,
   }
 ];
+
+const getRandomPatchCableColor = () => {
+  const index = Math.floor(Math.random() * colors.length);
+  return colors[index];
+};
 
 const getJackById = (jackIdToLookFor) => {
   let foundJack = null;
@@ -52,6 +69,7 @@ const getJackById = (jackIdToLookFor) => {
 function App() {
   const [isPatching, setIsPatching] = useState(false);
   const [ghostPatchCable, setGhostPatchCable] = useState({
+    color: 'black',
     startX: 0,
     startBezierX: 0,
     startY: 0,
@@ -64,6 +82,7 @@ function App() {
   const [cables, setCables] = useState([]);
 
   const createNewPatchCable = (cable) => {
+    console.log('%cDEBUG', 'background-color: #1962dd; padding: 5px; border-radius: 3px; font-weight: bold; color: white', cable, cables);
     setCables([
       ...cables,
       cable,
@@ -71,19 +90,21 @@ function App() {
   };
 
   const startCable = (event, jackId) => {
+    event.preventDefault();
+    event.stopPropagation();
     const { x: startX, y: startY } = getJackById(jackId);
     const { x: startRandomOffsetX, y: startRandomOffsetY } = getRandomOffset(startX, startY);
-    event.preventDefault();
     setIsPatching(true);
 
     setGhostPatchCable({
       ...ghostPatchCable,
+      color: getRandomPatchCableColor(),
       startX,
       startY,
       startBezierX: startRandomOffsetX,
       startBezierY: startRandomOffsetY,
     });
-    console.log('%cSTART FROM JACK', 'background-color: #c36230; padding: 5px; border-radius: 3px; font-weight: bold; color: white');
+    console.log('%cSTART FROM JACK', 'background-color: #c36230; padding: 5px; border-radius: 3px; font-weight: bold; color: white', getJackById(jackId));
   };
 
   const dropCable = ({ target: { className } }) => {
@@ -94,9 +115,12 @@ function App() {
   };
 
   const endCable = (event, jackId) => {
+    event.preventDefault();
+    event.stopPropagation();
     const { x: endX, y: endY } = getJackById(jackId);
     const { x: endRandomOffsetX, y: endRandomOffsetY } = getRandomOffset(endX, endY);
     setIsPatching(false);
+
     createNewPatchCable({
       ...ghostPatchCable,
       endX,
@@ -104,11 +128,17 @@ function App() {
       endBezierX: endRandomOffsetX,
       endBezierY: endRandomOffsetY,
     });
-    console.log('%cPLUGGED IT INTO PORT', 'background-color: #f0b430; padding: 5px; border-radius: 3px; font-weight: bold; color: black', cables);
+    console.log('%cPLUGGED IT INTO PORT', 'background-color: #f0b430; padding: 5px; border-radius: 3px; font-weight: bold; color: black', ghostPatchCable);
   };
 
-  const moveCableAround = ({ clientX, clientY }) => {
-    if (isPatching) {
+  const moveCableAround = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const { target, clientX, clientY } = event;
+
+
+    if (!target.classList.contains('PJ301-jack')) {
       setGhostPatchCable({
         ...ghostPatchCable,
         endX: clientX,
@@ -121,35 +151,13 @@ function App() {
     <div className="App">
       <svg onMouseMove={(event) => moveCableAround(event)} onMouseUp={(event) => dropCable(event)} className="eurorack-container" width="500" height="500">
         {jacks.map(({ id, x, y }) => (
-          <circle key={id} onMouseUp={(event) => endCable(event, id)} onMouseDown={(event) => startCable(event, id)} cx={x} cy={y} r="20" stroke="gray" strokeWidth="4" fill="black" />
+          <PJ301 key={id} id={id} startCable={startCable} endCable={endCable} x={x} y={y} />
         ))}
         {cables.map((cable, index) => (
-          <path
-            key={index}
-            strokeWidth="10"
-            stroke="#fac12d"
-            fill="transparent"
-            d={`
-              M ${cable.startX} ${cable.startY}
-              C ${cable.startBezierX} ${cable.startBezierY}
-              ${cable.endBezierX} ${cable.endBezierY}
-              ${cable.endX} ${cable.endY}
-            `}
-            strokeLinecap="round" />
+          <PatchCable key={index} parameters={cable} isConnected />
         ))}
         {isPatching ? (
-          <path
-            opacity="0.6"
-            strokeWidth="10"
-            stroke="#fac12d"
-            fill="transparent"
-            d={`
-              M ${ghostPatchCable.startX} ${ghostPatchCable.startY}
-              C ${ghostPatchCable.startBezierX} ${ghostPatchCable.startBezierY}
-              ${ghostPatchCable.endX} ${ghostPatchCable.endY}
-              ${ghostPatchCable.endX} ${ghostPatchCable.endY}
-            `}
-            strokeLinecap="round" />
+          <PatchCable parameters={ghostPatchCable} />
         ) : (
           <></>
         )}
