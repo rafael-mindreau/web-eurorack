@@ -123,7 +123,12 @@ export default ({ children }) => {
       moveCableAround,
       isPatching
     }}>
-      <svg onMouseMove={(event) => moveCableAround(event)} onMouseUp={(event) => dropCable(event)} className="eurorack-case" width="500" height="500">
+      <svg
+        onMouseMove={(event) => moveCableAround(event)}
+        onMouseUp={(event) => dropCable(event)}
+        className="eurorack-case"
+        width="500"
+        height="500">
         {children}
         {cables.map((cable, index) => (
           <PatchCable key={index} parameters={cable} startCable={startCable} endCable={endCable} isConnected />
