@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PatchCable from '../devices/PatchCable';
 import { getJackById, JACK_TYPES } from '../../utils/jack';
 import { patchCableColors } from '../../constants/colors';
@@ -61,6 +61,24 @@ export default ({ children }) => {
     endY: 0,
   });
   const [cables, setCables] = useState([]);
+  const [modifier, setModfier] = useState(null);
+
+  // Hotkey modifier listener
+  useEffect(() => {
+    window.addEventListener('keydown', ({ keyCode }) => {
+      switch (keyCode) {
+        case 18:
+          setModfier('move');
+          break;
+        default:
+          setModfier(null);
+      }
+    });
+
+    window.addEventListener('keyup', () => {
+      setModfier(null);
+    });
+  }, []);
 
   const createNewPatchCable = (cable) => {
     setCables([
@@ -121,7 +139,8 @@ export default ({ children }) => {
       dropCable,
       endCable,
       moveCableAround,
-      isPatching
+      isPatching,
+      modifier,
     }}>
       <svg
         onMouseMove={(event) => moveCableAround(event)}
