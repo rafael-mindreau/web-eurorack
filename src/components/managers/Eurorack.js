@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PatchCable from '../devices/PatchCable';
 import { getJackById, JACK_TYPES } from '../../utils/jack';
 import { patchCableColors } from '../../constants/colors';
+import { v4 as uuid } from 'uuid';
 
 export const EurorackContext = React.createContext();
 
@@ -60,7 +61,7 @@ export default ({ children }) => {
     endX: 0,
     endY: 0,
   });
-  const [cables, setCables] = useState([]);
+  const [cables, setCables] = useState({});
   const [modifier, setModfier] = useState(null);
 
   // Hotkey modifier listener
@@ -81,10 +82,17 @@ export default ({ children }) => {
   }, []);
 
   const createNewPatchCable = (cable) => {
-    setCables([
-      ...cables,
-      cable,
-    ]);
+    const id = uuid();
+
+    // Get the old ones first
+    const updatedCables = { ...cables };
+
+    // Set the new cable on the set
+    updatedCables[id] = cable;
+
+    setCables({
+      ...updatedCables
+    });
   };
 
   const startCable = (event, jackId) => {
@@ -149,8 +157,14 @@ export default ({ children }) => {
         width="500"
         height="500">
         {children}
-        {cables.map((cable, index) => (
-          <PatchCable key={index} parameters={cable} startCable={startCable} endCable={endCable} isConnected />
+        {Object.keys(cables).map((cableId) => (
+          <PatchCable
+            key={cableId}
+            id={cableId}
+            parameters={cables[cableId]}
+            startCable={startCable}
+            endCable={endCable}
+            isConnected />
         ))}
         {isPatching ? (
           <PatchCable parameters={ghostPatchCable} />
