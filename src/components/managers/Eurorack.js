@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PatchCable from '../devices/PatchCable';
-import { getJackById, JACK_TYPES } from '../../utils/jack';
+import { JACK_TYPES } from '../../utils/jack';
 import { patchCableColors } from '../../constants/colors';
 import { v4 as uuid } from 'uuid';
 
@@ -56,6 +56,8 @@ export default ({ children }) => {
   const [isPatching, setIsPatching] = useState(false);
   const [ghostPatchCable, setGhostPatchCable] = useState({
     color: 'black',
+    jackA: null,
+    jackB: null,
     startX: 0,
     startY: 0,
     endX: 0,
@@ -95,16 +97,13 @@ export default ({ children }) => {
     });
   };
 
-  const startCable = (event, jackId) => {
-    const { x: startX, y: startY } = getJackById(jackId, jacks);
+  const startCable = (event, jack) => {
     setIsPatching(true);
 
     setGhostPatchCable({
       ...ghostPatchCable,
       color: getRandomPatchCableColor(),
-      startX,
-      startY,
-      startJackId: jackId,
+      jackA: jack,
     });
   };
 
@@ -112,19 +111,31 @@ export default ({ children }) => {
     setIsPatching(false);
   };
 
-  const endCable = (event, jackId) => {
+  const endCable = (event, jack) => {
     event.preventDefault();
     event.stopPropagation();
-    const { x: endX, y: endY } = getJackById(jackId, jacks);
     setIsPatching(false);
 
     createNewPatchCable({
       ...ghostPatchCable,
-      endX,
-      endY,
-      endJackId: jackId,
+      jackB: jack,
     });
   };
+
+  const modifyCable = (event, jack, cableId) => {
+    const { jackA, jackB } = cables[cableId];
+
+    if (jackA.id === jack.idea) {
+      const updatedCables = cables[cableId] = {
+        ...cables[cableId],
+        jackA: null,
+      };
+
+      setCables({
+        ...updatedCables,
+      });
+    }
+  }
 
   const moveCableAround = ({ clientX, clientY }) => {
     updateGhostPosition({ x: clientX, y: clientY });
@@ -133,8 +144,8 @@ export default ({ children }) => {
   const updateGhostPosition = ({ x, y }) => {
     setGhostPatchCable({
       ...ghostPatchCable,
-      endX: x,
-      endY: y,
+      dragPosX: x,
+      dragPosY: y,
     });
   };
 
@@ -164,6 +175,7 @@ export default ({ children }) => {
             parameters={cables[cableId]}
             startCable={startCable}
             endCable={endCable}
+            modifyCable={modifyCable}
             isConnected />
         ))}
         {isPatching ? (

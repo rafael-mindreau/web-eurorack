@@ -11,9 +11,12 @@ export default () => {
 
   return (
     <g className="eurorack-module-panel">
-      {jacks.map(({ id, x, y }) => (
-        <PJ301 key={id} id={id} startCable={startCable} endCable={endCable} x={x} y={y} />
-      ))}
+      {jacks.map((jack) => {
+        const { id, x, y } = jack;
+        return (
+          <PJ301 key={id} jack={jack} startCable={startCable} endCable={endCable} x={x} y={y} />
+        )
+      })}
     </g>
   );
 }

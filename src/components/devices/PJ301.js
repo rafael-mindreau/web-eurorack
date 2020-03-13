@@ -2,6 +2,7 @@ import React from 'react';
 
 export default ({
   id,
+  jack,
   x,
   y,
   endCable,
@@ -11,8 +12,8 @@ export default ({
     <g
       className="PJ301-jack"
       id={`jack-${id}`}
-      onMouseUp={(event) => endCable(event, id)}
-      onMouseDown={(event) => startCable(event, id)}>
+      onMouseUp={(event) => endCable(event, jack)}
+      onMouseDown={(event) => startCable(event, jack)}>
       <circle
         cx={x}
         cy={y}
