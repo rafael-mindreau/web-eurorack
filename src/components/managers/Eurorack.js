@@ -112,11 +112,14 @@ export default ({ children }) => {
     event.stopPropagation();
     setIsPatching(false);
 
-    createNewPatchCable({
-      ...ghostPatchCable,
-      jackA: ghostPatchCable.jackA ? ghostPatchCable.jackA : jack,
-      jackB: ghostPatchCable.jackB ? ghostPatchCable.jackB : jack,
-    });
+    // Check if the new destination is the same as the other jack (disables self-patching)
+    if (ghostPatchCable.jackA.id !== jack.id && ghostPatchCable.jackA !== jack.id) {
+      createNewPatchCable({
+        ...ghostPatchCable,
+        jackA: ghostPatchCable.jackA ? ghostPatchCable.jackA : jack,
+        jackB: ghostPatchCable.jackB ? ghostPatchCable.jackB : jack,
+      });
+    }
   };
 
   const modifyCable = (event, jack, cableId) => {
