@@ -17,6 +17,11 @@ export default ({
       <circle
         cx={x}
         cy={y}
+        r="24"
+        fill="transparent" />
+      <circle
+        cx={x}
+        cy={y}
         r="18"
         stroke="darkgray"
         strokeWidth="1"

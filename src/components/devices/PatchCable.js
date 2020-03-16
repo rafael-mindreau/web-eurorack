@@ -10,8 +10,6 @@ export default ({
     jackB,
     dragPosX,
     dragPosY,
-    startJackId,
-    endJackId,
   },
   startCable,
   endCable,
@@ -59,14 +57,14 @@ export default ({
             cx={startPosition.x}
             cy={startPosition.y}
             fill="transparent"
-            r="12" />
+            r="15" />
           <circle
             onMouseUp={(event) => endCable(event, jackB)}
             onMouseDown={(event) => startCable(event, jackB, cableId)}
             cx={endPosition.x}
             cy={endPosition.y}
             fill="transparent"
-            r="12" />
+            r="15" />
         </>
       ) : <></> }
 
