@@ -58,10 +58,6 @@ export default ({ children }) => {
     color: 'black',
     jackA: null,
     jackB: null,
-    startX: 0,
-    startY: 0,
-    endX: 0,
-    endY: 0,
   });
   const [cables, setCables] = useState({});
   const [modifier, setModfier] = useState(null);
@@ -118,21 +114,27 @@ export default ({ children }) => {
 
     createNewPatchCable({
       ...ghostPatchCable,
-      jackB: jack,
+      jackA: ghostPatchCable.jackA ? ghostPatchCable.jackA : jack,
+      jackB: ghostPatchCable.jackB ? ghostPatchCable.jackB : jack,
     });
   };
 
   const modifyCable = (event, jack, cableId) => {
     const { jackA, jackB } = cables[cableId];
+    setIsPatching(true);
 
-    if (jackA.id === jack.idea) {
-      const updatedCables = cables[cableId] = {
-        ...cables[cableId],
+    const updatedCables = { ...cables };
+    delete updatedCables[cableId];
+
+    setCables({
+      ...updatedCables
+    });
+
+    if (jackA.id === jack.id) {
+      setGhostPatchCable({
+        ...ghostPatchCable,
         jackA: null,
-      };
-
-      setCables({
-        ...updatedCables,
+        jackB,
       });
     }
   }
