@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PatchCable from '../devices/PatchCable';
 import { JACK_TYPES } from '../../utils/jack';
+import { alreadyExists, isSelfPatched } from '../../utils/cable';
 import { patchCableColors } from '../../constants/colors';
 import { v4 as uuid } from 'uuid';
 
@@ -112,13 +113,15 @@ export default ({ children }) => {
     event.stopPropagation();
     setIsPatching(false);
 
+    const newCable = {
+      ...ghostPatchCable,
+      jackA: ghostPatchCable.jackA ? ghostPatchCable.jackA : jack,
+      jackB: ghostPatchCable.jackB ? ghostPatchCable.jackB : jack,
+    };
+
     // Check if the new destination is the same as the other jack (disables self-patching)
-    if (ghostPatchCable.jackA.id !== jack.id && ghostPatchCable.jackA !== jack.id) {
-      createNewPatchCable({
-        ...ghostPatchCable,
-        jackA: ghostPatchCable.jackA ? ghostPatchCable.jackA : jack,
-        jackB: ghostPatchCable.jackB ? ghostPatchCable.jackB : jack,
-      });
+    if (!isSelfPatched(newCable) && !alreadyExists(newCable, cables)) {
+      createNewPatchCable(newCable);
     }
   };
 
