@@ -7,7 +7,8 @@
 export const alreadyExists = ({ jackA: currentJackA, jackB: currentJackB }, allCables) => {
   return Object.keys(allCables).some((cableId) => {
     const { jackA: existingJackA, jackB: existingJackB } = allCables[cableId];
-    return currentJackA.id === existingJackA.id && currentJackB.id === existingJackB.id;
+    return (currentJackA.id === existingJackA.id && currentJackB.id === existingJackB.id)
+      || (currentJackA.id === existingJackB.id && currentJackB.id === existingJackA.id);
   });
 };
 
