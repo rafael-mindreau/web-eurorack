@@ -29,8 +29,8 @@ export default ({
     return { x: dragPosX, y: dragPosY };
   };
 
-  const startPosition = getPositionFromJackOrMouse(jackA);
-  const endPosition = getPositionFromJackOrMouse(jackB);
+  const positionA = getPositionFromJackOrMouse(jackA);
+  const positionB = getPositionFromJackOrMouse(jackB);
 
   return (
     <g className="patch-cable">
@@ -40,10 +40,10 @@ export default ({
         stroke={color}
         fill="transparent"
         d={`
-          M ${startPosition.x} ${startPosition.y}
-          C ${startPosition.x} ${startPosition.y + CABLE_SLACK_AMOUNT}
-          ${endPosition.x} ${endPosition.y + CABLE_SLACK_AMOUNT}
-          ${endPosition.x} ${endPosition.y}
+          M ${positionA.x} ${positionA.y}
+          C ${positionA.x} ${positionA.y + CABLE_SLACK_AMOUNT}
+          ${positionB.x} ${positionB.y + CABLE_SLACK_AMOUNT}
+          ${positionB.x} ${positionB.y}
         `}
         strokeLinecap="round" />
 
@@ -53,15 +53,15 @@ export default ({
           <circle
             onMouseUp={(event) => endCable(event, jackA)}
             onMouseDown={(event) => startCable(event, jackA, cableId)}
-            cx={startPosition.x}
-            cy={startPosition.y}
+            cx={positionA.x}
+            cy={positionA.y}
             fill="transparent"
             r="15" />
           <circle
             onMouseUp={(event) => endCable(event, jackB)}
             onMouseDown={(event) => startCable(event, jackB, cableId)}
-            cx={endPosition.x}
-            cy={endPosition.y}
+            cx={positionB.x}
+            cy={positionB.y}
             fill="transparent"
             r="15" />
         </>
