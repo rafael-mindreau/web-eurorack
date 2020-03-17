@@ -49,8 +49,7 @@ export default ({
 
       {isConnected ? (
         <>
-          // These nodes are purely meant for stacking cables
-          // Or for allowing user to get hard to reach spots
+          // These nodes are purely clickable regions that allow stacking/modifying cables
           <circle
             onMouseUp={(event) => endCable(event, jackA)}
             onMouseDown={(event) => startCable(event, jackA, cableId)}
