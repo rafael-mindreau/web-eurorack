@@ -24,6 +24,7 @@ export default ({
     for (let i = 1; i <= hp; i++) {
       holes.push((
         <circle
+          key={`hole-at-${i + 1}-hp`}
           cx={(i * HORIZONTAL_PITCH_TO_PIXEL_RATIO) - (HORIZONTAL_PITCH_TO_PIXEL_RATIO / 2)}
           cy={yPosition + (HORIZONTAL_PITCH_TO_PIXEL_RATIO / 2)}
           r={HORIZONTAL_PITCH_TO_PIXEL_RATIO / 4}
