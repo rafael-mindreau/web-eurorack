@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PatchCable from '../devices/PatchCable';
+import Rack from '../Rack.js';
 import { JACK_TYPES } from '../../utils/jack';
 import { alreadyExists, isSelfPatched } from '../../utils/cable';
 import { patchCableColors } from '../../constants/colors';
@@ -173,9 +174,11 @@ export default ({ children }) => {
         onMouseMove={(event) => moveCableAround(event)}
         onMouseUp={(event) => dropCable(event)}
         className="eurorack-case"
-        width="500"
-        height="500">
-        {children}
+        width="100%"
+        height="600">
+        <Rack hp={84} rackHeightUnits={3}>
+          {children}
+        </Rack>
         {Object.keys(cables).map((cableId) => (
           <PatchCable
             key={cableId}
