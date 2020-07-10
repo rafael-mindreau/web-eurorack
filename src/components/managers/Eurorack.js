@@ -14,7 +14,7 @@ const getRandomPatchCableColor = () => {
   return colorSet[index];
 };
 
-export default ({ children }) => {
+export default ({ hp, children }) => {
   const [isPatching, setIsPatching] = useState(false);
   const [ghostPatchCable, setGhostPatchCable] = useState({
     color: 'black',
@@ -135,7 +135,7 @@ export default ({ children }) => {
         className="eurorack-case"
         width="100%"
         height="600">
-        <Rack hp={84} rackHeightUnits={3}>
+        <Rack hp={hp} rackHeightUnits={3}>
           {children}
         </Rack>
         {Object.keys(cables).map((cableId) => (

@@ -7,8 +7,10 @@ import {
   HORIZONTAL_PITCH_TO_PIXEL_RATIO,
 } from '../../constants/units';
 
+import './VCO-1.scss';
+
 const PANEL_COLOR = '#dbdbdb';
-const HP = 12;
+const HP = 10;
 const U = 3;
 
 const jacks = [
@@ -16,37 +18,37 @@ const jacks = [
     id: 0,
     type: JACK_TYPES.OUTPUT,
     x: 50,
-    y: 50,
+    y: 430,
   },
   {
     id: 1,
     type: JACK_TYPES.INPUT,
     x: 100,
-    y: 50,
+    y: 430,
   },
   {
     id: 2,
     type: JACK_TYPES.INPUT,
     x: 150,
-    y: 50,
+    y: 430,
   },
   {
     id: 3,
     type: JACK_TYPES.INPUT,
     x: 50,
-    y: 100,
+    y: 480,
   },
   {
     id: 4,
     type: JACK_TYPES.OUTPUT,
     x: 100,
-    y: 100,
+    y: 480,
   },
   {
     id: 5,
     type: JACK_TYPES.OUTPUT,
     x: 150,
-    y: 100,
+    y: 480,
   },
 ];
 
@@ -59,8 +61,9 @@ export default ({
   } = useContext(EurorackContext);
 
   return (
-    <g transform={`translate(${offset * HORIZONTAL_PITCH_TO_PIXEL_RATIO} 0)`} className="eurorack-module-panel">
+    <g transform={`translate(${offset * HORIZONTAL_PITCH_TO_PIXEL_RATIO} 0)`} className="eurorack-module-panel VCO-1">
       <Panel fill={PANEL_COLOR} hp={HP} moduleHeight={U} />
+      <text textAnchor="middle" className="panel-header-text" x="100" y="30">VCO-1</text>
       {jacks.map((jack) => {
         const { id, x, y } = jack;
         return (

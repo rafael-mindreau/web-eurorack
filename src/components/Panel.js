@@ -10,7 +10,7 @@ import {
 export default ({
   hp,
   moduleHeight,
-  offset,
+  offset = 0,
   fill = '#d5d5d5',
 }) => {
   return (
