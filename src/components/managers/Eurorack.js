@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PatchCable from '../devices/PatchCable';
 import Rack from '../Rack.js';
-import { JACK_TYPES } from '../../utils/jack';
 import { alreadyExists, isSelfPatched } from '../../utils/cable';
 import { patchCableColors } from '../../constants/colors';
 import { v4 as uuid } from 'uuid';
@@ -14,45 +13,6 @@ const getRandomPatchCableColor = () => {
   const index = Math.floor(Math.random() * colorSet.length);
   return colorSet[index];
 };
-
-const jacks = [
-  {
-    id: 0,
-    type: JACK_TYPES.OUTPUT,
-    x: 50,
-    y: 50,
-  },
-  {
-    id: 1,
-    type: JACK_TYPES.INPUT,
-    x: 100,
-    y: 50,
-  },
-  {
-    id: 2,
-    type: JACK_TYPES.INPUT,
-    x: 150,
-    y: 50,
-  },
-  {
-    id: 3,
-    type: JACK_TYPES.INPUT,
-    x: 50,
-    y: 100,
-  },
-  {
-    id: 4,
-    type: JACK_TYPES.OUTPUT,
-    x: 100,
-    y: 100,
-  },
-  {
-    id: 5,
-    type: JACK_TYPES.OUTPUT,
-    x: 150,
-    y: 100,
-  },
-];
 
 export default ({ children }) => {
   const [isPatching, setIsPatching] = useState(false);
@@ -162,7 +122,6 @@ export default ({ children }) => {
     <EurorackContext.Provider value={{
       ghostPatchCable,
       cables,
-      jacks,
       startCable,
       dropCable,
       endCable,
