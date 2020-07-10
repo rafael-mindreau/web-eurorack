@@ -2,10 +2,10 @@ import React, { useContext } from 'react';
 import PJ301 from '../devices/PJ301';
 import { EurorackContext } from '../managers/Eurorack';
 import { JACK_TYPES } from '../../utils/jack';
+import { HORIZONTAL_PITCH_TO_PIXEL_RATIO } from '../../constants/units';
+
 import Panel from '../Panel';
-import {
-  HORIZONTAL_PITCH_TO_PIXEL_RATIO,
-} from '../../constants/units';
+import DaviesKnob from '../devices/DaviesKnob';
 
 import './VCO-1.scss';
 
@@ -59,10 +59,16 @@ export default ({
     startCable,
     endCable,
   } = useContext(EurorackContext);
+  const offsetInPixels = offset * HORIZONTAL_PITCH_TO_PIXEL_RATIO;
+
+  const changerFrequency = () => {
+
+  };
 
   return (
-    <g transform={`translate(${offset * HORIZONTAL_PITCH_TO_PIXEL_RATIO} 0)`} className="eurorack-module-panel VCO-1">
+    <g transform={`translate(${offsetInPixels} 0)`} className="eurorack-module-panel VCO-1">
       <Panel fill={PANEL_COLOR} hp={HP} moduleHeight={U} />
+      <DaviesKnob scale={0.7} x={40} y={40} onChange={changerFrequency} offset={offsetInPixels} />
       <text textAnchor="middle" className="panel-header-text" x="100" y="30">VCO-1</text>
       {jacks.map((jack) => {
         const { id, x, y } = jack;

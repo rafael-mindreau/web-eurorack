@@ -6,8 +6,7 @@ export default () => {
   return (
     <div className="App">
       <Eurorack hp={84}>
-        <VCO offset={2} />
-        <VCO offset={15} />
+        <VCO offset={20} />
       </Eurorack>
     </div>
   );
