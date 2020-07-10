@@ -21,7 +21,7 @@ export default ({
     const { x: panelX, y: panelY } = translateGlobalCoordinatesToLocal(clientX, clientY, offset, 0);
     const { x: knobX, y: knobY } = translateGlobalCoordinatesToLocal(panelX, panelY, x, y);
     const { angle } = cartesianToPolar(knobX / scale, knobY / scale, center);
-    setDragHandlePosition(angle);
+    setDragHandlePosition(angle - rotation);
     setIsDragging(true);
   }
 
