@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Panel from '../Panel';
+import { HORIZONTAL_PITCH_TO_PIXEL_RATIO } from '../../constants/units';
 
 export default ({
   hp,
@@ -7,9 +8,11 @@ export default ({
   offset,
   fill = '#d5d5d5',
 }) => {
+  const [offsetInPixels] = useState(offset * HORIZONTAL_PITCH_TO_PIXEL_RATIO);
+
   return (
-    <g className="eurorack-module-panel">
-      <Panel fill={fill} offset={offset} hp={hp} moduleHeight={u} />
+    <g transform={`translate(${offsetInPixels} 0)`} className="eurorack-module-panel">
+      <Panel fill={fill} hp={hp} moduleHeight={u} />
     </g>
   );
 }
