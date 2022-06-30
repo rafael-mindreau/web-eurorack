@@ -1,0 +1,13 @@
+.generic-knob {
+  .draggable-region {
+    position: absolute;
+    z-index: 999;
+
+    fill: transparent;
+
+    &.dragging {
+      width: 200vw;
+      height: 200vh;
+    }
+  }
+}

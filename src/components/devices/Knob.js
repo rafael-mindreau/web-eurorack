@@ -3,6 +3,7 @@ import {
   translateGlobalCoordinatesToLocal,
   cartesianToPolar,
 } from '../../utils/conversions';
+import './Knob.scss';
 
 export default ({
   children,
@@ -11,6 +12,7 @@ export default ({
   scale,
   offset,
   onChange,
+  className,
 }) => {
   const [rotation, setRotation] = useState(0);
   const [dragHandlePosition, setDragHandlePosition] = useState(0);
@@ -41,13 +43,14 @@ export default ({
 
   return (
     <g
-      className="davies-knob"
+      className={`generic-knob ${className}`}
       onMouseDown={startDrag}
       onMouseMove={drag}
       onMouseUp={endDrag}
       onMouseLeave={endDrag}
       transform={`scale(${scale} ${scale}) translate(${x} ${y}) rotate(${rotation} ${center.x} ${center.y})`}>
       {children}
+      <rect x="-100vw" y="-100vh" className={`draggable-region ${isDragging ? 'dragging' : ''}`} />
     </g>
   )
 }

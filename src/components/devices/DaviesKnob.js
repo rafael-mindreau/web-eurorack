@@ -5,7 +5,7 @@ import './DaviesKnob.scss';
 export default (props) => {
 
   return (
-    <Knob {...props}>
+    <Knob className="davies-knob" {...props}>
       <g>
         <circle className="st0" cx="100" cy="100" r="77"/>
       </g>
