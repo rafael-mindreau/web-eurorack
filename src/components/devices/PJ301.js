@@ -1,5 +1,6 @@
 import React from 'react';
 import { translateCoordinatesForJack } from '../../utils/conversions';
+import './PJ301.scss';
 
 export default ({
   id,
@@ -12,7 +13,7 @@ export default ({
 }) => {
   return (
     <g
-      className="PJ301-jack"
+      className={`PJ301-jack ${jack.type.toLowerCase()}`}
       id={`jack-${id}`}
       onMouseUp={(event) => endCable(event, translateCoordinatesForJack(jack, offset))}
       onMouseDown={(event) => startCable(event, translateCoordinatesForJack(jack, offset))}>
@@ -22,6 +23,7 @@ export default ({
         r="24"
         fill="transparent" />
       <circle
+        className="type-ring"
         cx={x}
         cy={y}
         r="18"
