@@ -30,7 +30,7 @@ class ToneProcessor extends AudioWorkletProcessor {
   }
 }
 
-registerProcessor('tone-processor', ToneProcessor);
+registerProcessor('VCO-1', ToneProcessor);
 
 function getSineWave(frequency, time) {
     return 0.5 * Math.sin(frequency * 2 * Math.PI * time);

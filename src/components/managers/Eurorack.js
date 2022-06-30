@@ -23,9 +23,10 @@ export default ({ hp, children }) => {
   });
   const [cables, setCables] = useState({});
   const [modifier, setModfier] = useState(null);
+  const [audioContext, setAudioContext] = useState(null);
 
-  // Hotkey modifier listener
   useEffect(() => {
+    // Hotkey modifier listener
     window.addEventListener('keydown', ({ keyCode }) => {
       switch (keyCode) {
         case 18:
@@ -53,6 +54,15 @@ export default ({ hp, children }) => {
     setCables({
       ...updatedCables
     });
+
+    console.log('%cCABLE', 'background-color: #7044b5; padding: 5px; border-radius: 3px; font-weight: bold; color: white', cable);
+    // So this part is what the entire app is about, connecting audio nodes together
+    // You were probably looking for this magical part, which actually does it very
+    // predictably and boringly elegant:
+    if (cable.jackA.node && cable.jackB.node) {
+      // A cable just simply connects two audio nodes :)
+      cable.jackA.node.connect(cable.jackB.node);
+    }
   };
 
   const startCable = (event, jack) => {
@@ -63,6 +73,14 @@ export default ({ hp, children }) => {
       color: getRandomPatchCableColor(),
       jackA: jack,
     });
+
+    // Set up Audio Context
+    // We do this in a user-interaction because Chrome otherwise prevents it
+    // This is described here: https://goo.gl/7K7WLu
+    if (!audioContext) {
+      const context = new AudioContext();
+      setAudioContext(context);
+    }
   };
 
   const dropCable = () => {
@@ -120,6 +138,7 @@ export default ({ hp, children }) => {
 
   return (
     <EurorackContext.Provider value={{
+      audioContext,
       ghostPatchCable,
       cables,
       startCable,

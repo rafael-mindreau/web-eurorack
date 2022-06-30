@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PJ301 from '../devices/PJ301';
 import { EurorackContext } from '../managers/Eurorack';
 import { JACK_TYPES } from '../../utils/jack';
@@ -13,84 +13,83 @@ const PANEL_COLOR = '#dbdbdb';
 const HP = 10;
 const U = 3;
 
-const jacks = [
-  {
-    id: 0,
-    type: JACK_TYPES.INPUT,
-    x: 50,
-    y: 430,
-  },
-  {
-    id: 1,
-    type: JACK_TYPES.INPUT,
-    x: 100,
-    y: 430,
-  },
-  {
-    id: 2,
-    type: JACK_TYPES.INPUT,
-    x: 150,
-    y: 430,
-  },
-  {
-    id: 3,
-    type: JACK_TYPES.INPUT,
-    x: 50,
-    y: 480,
-  },
-  {
-    id: 4,
-    type: JACK_TYPES.OUTPUT,
-    x: 100,
-    y: 480,
-  },
-  {
-    id: 5,
-    type: JACK_TYPES.OUTPUT,
-    x: 150,
-    y: 480,
-  },
-];
-
 export default ({
   offset,
 }) => {
   const {
+    audioContext,
     startCable,
     endCable,
   } = useContext(EurorackContext);
   const offsetInPixels = offset * HORIZONTAL_PITCH_TO_PIXEL_RATIO;
-  const [context, setContext] = useState(null);
   const [toneNode, setToneNode] = useState(null);
+  const [jacks, updateJacks] = useState([
+    {
+      id: 0,
+      type: JACK_TYPES.INPUT,
+      x: 50,
+      y: 430,
+    },
+    {
+      id: 1,
+      type: JACK_TYPES.INPUT,
+      x: 100,
+      y: 430,
+    },
+    {
+      id: 2,
+      type: JACK_TYPES.INPUT,
+      x: 150,
+      y: 430,
+    },
+    {
+      id: 3,
+      type: JACK_TYPES.INPUT,
+      x: 50,
+      y: 480,
+    },
+    {
+      id: 4,
+      type: JACK_TYPES.INPUT,
+      x: 100,
+      y: 480,
+    },
+    {
+      id: 5,
+      type: JACK_TYPES.OUTPUT,
+      x: 150,
+      y: 480,
+    },
+  ]);
 
   const changeFrequency = (value) => {
     toneNode.parameters.get('frequency').value = value;
   };
 
-  const play = async () => {
-    if (!context && !toneNode) {
-      console.log('%cPLAY', 'background-color: #4eb8d6; padding: 5px; border-radius: 3px; font-weight: bold; color: white');
-      const ctx = new AudioContext();
-      await ctx.audioWorklet.addModule('worklet/processor.js');
-      setContext(ctx);
+  useEffect(() => {
+    // Register this device's worklet to the context from the main manager
+    if (audioContext && !toneNode) {
+      const createAudioNode = async () => {
+        await audioContext.audioWorklet.addModule('worklet/VCO-1.js');
+        const toneNode = new AudioWorkletNode(audioContext, 'VCO-1');
+        toneNode.parameters.get('sampleRate').value = audioContext.sampleRate;
+        setToneNode(toneNode);
 
-      const toneNode = new AudioWorkletNode(ctx, 'tone-processor');
-      console.log('%cDEBUG', 'background-color: #1962dd; padding: 5px; border-radius: 3px; font-weight: bold; color: white', toneNode.parameters.get('sampleRate'));
-      toneNode.parameters.get('sampleRate').value = ctx.sampleRate;
-      setToneNode(toneNode);
-
-      toneNode.connect(ctx.destination);
+        const updatedJacks = [...jacks];
+        updatedJacks[5] = { ...updatedJacks[5], node: toneNode };
+        updateJacks(updatedJacks);
+      }
+      createAudioNode();
     }
-  }
+  }, [audioContext]);
 
   return (
-    <g onClick={play} transform={`translate(${offsetInPixels} 0)`} className="eurorack-module-panel VCO-1">
+    <g transform={`translate(${offsetInPixels} 0)`} className="eurorack-module-panel VCO-1">
       <Panel fill={PANEL_COLOR} hp={HP} moduleHeight={U} />
       <DaviesKnob
         scale={0.7}
         x={40}
         y={40}
-        onClick={play}
         onChange={changeFrequency}
         offset={offsetInPixels}
         minValue={0}
