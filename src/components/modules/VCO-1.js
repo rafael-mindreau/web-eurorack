@@ -63,7 +63,9 @@ export default ({
   ]);
 
   const changeFrequency = (value) => {
-    toneNode.parameters.get('frequency').value = value;
+    if (toneNode) {
+      toneNode.parameters.get('frequency').value = value;
+    }
   };
 
   useEffect(() => {

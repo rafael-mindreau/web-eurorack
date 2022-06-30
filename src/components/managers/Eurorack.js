@@ -66,20 +66,21 @@ export default ({ hp, children }) => {
   };
 
   const startCable = (event, jack) => {
-    setIsPatching(true);
-
-    setGhostPatchCable({
-      ...ghostPatchCable,
-      color: getRandomPatchCableColor(),
-      jackA: jack,
-    });
-
     // Set up Audio Context
     // We do this in a user-interaction because Chrome otherwise prevents it
     // This is described here: https://goo.gl/7K7WLu
+    // Don't allow patching until we have the context set up
     if (!audioContext) {
       const context = new AudioContext();
       setAudioContext(context);
+    } else {
+      setIsPatching(true);
+
+      setGhostPatchCable({
+        ...ghostPatchCable,
+        color: getRandomPatchCableColor(),
+        jackA: jack,
+      });
     }
   };
 
